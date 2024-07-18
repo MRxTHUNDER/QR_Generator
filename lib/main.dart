@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -11,8 +13,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'UPI to QR Code Converter',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
+
       ),
       home: HomeScreen(),
     );
@@ -23,7 +27,9 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 184, 221, 252),
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 229, 197, 222),
         title: Text('UPI to QR Code Converter'),
       ),
       body: Padding(
@@ -96,15 +102,44 @@ class UPIForm extends ConsumerWidget {
     return Column(
       children: [
         TextFormField(
-          decoration: InputDecoration(labelText: 'Merchant / Payee Name'),
+          decoration: const InputDecoration(
+            labelText: 'Merchant / Payee Name',
+            prefixIcon: Icon(Icons.person),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12)
+                ),
+              ),
+            ),
           onChanged: (value) => ref.read(upiFormProvider.notifier).updateName(value),
         ),
+        SizedBox(height: 10),
         TextFormField(
-          decoration: InputDecoration(labelText: 'UPI ID'),
+          decoration: const InputDecoration(
+            labelText: 'UPI ID',
+            prefixIcon: Icon(Icons.payment),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12)
+                ),
+              ),
+            ),
           onChanged: (value) => ref.read(upiFormProvider.notifier).updateUpiId(value),
         ),
+        SizedBox(height: 10),
         TextFormField(
-          decoration: InputDecoration(labelText: 'Transaction Amount'),
+          decoration: const InputDecoration(
+            labelText: 'Transaction Amount',
+            prefixIcon: Icon(Icons.monetization_on),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12)
+                ),
+              ),
+            ),
           keyboardType: TextInputType.number,
           onChanged: (value) => ref.read(upiFormProvider.notifier).updateAmount(value),
         ),
@@ -119,12 +154,23 @@ class QRCodeDisplay extends ConsumerWidget {
     final formState = ref.watch(upiFormProvider);
     final upiString = formState.generateUPIString();
 
-    return Center(
-      child: QrImageView(
-      data: upiString,
-      version: QrVersions.auto,
-      size: 200.0,
+    return Container(
+    
+      //margin: EdgeInsetsDirectional.all(10),
+    decoration: BoxDecoration(
+    border: Border.all(
+      color: Colors.black,
+      width: 5.0,
     ),
+    borderRadius: BorderRadius.circular(15.0),
+  ),
+      child: Center(
+        child: QrImageView(
+        data: upiString,
+        version: QrVersions.auto,
+        size: 200.0,
+      ),
+      ),
     );
   }
 }
